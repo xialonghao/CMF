@@ -1,0 +1,90 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:;">列表</a></li>
+    </ul>
+
+    <form class="js-ajax-form" action="" method="post">
+        <div class="table-actions">
+            <notempty name="category">
+                <button class="btn btn-primary btn-sm js-ajax-submit" type="submit"
+                        data-action="{:url('AdminArticle/listOrder')}">{:lang('SORT')}
+                </button>
+            </notempty>
+            <button class="btn btn-danger btn-sm js-ajax-submit" type="submit"
+                    data-action="{:url('Modular/delone')}" data-subcheck="true" data-msg="您确定删除吗？">
+                批量删除
+            </button>
+            <a href="{:url('Modular/addfiled',['id'=>$res['Id'],'category_id'=>$res['category_id'],'surface'=>$res['surface']])}" style='background-color: #0d6aad;border: none; color:#fff; width:80px; height:25px;padding:3.5px 10px;border-radius: 3px;vertical-align: middle;font-size: 12px'>添加新字段</a>
+            <span class="tips_error"></span>
+        </div>
+        <table class="table table-hover table-bordered table-list">
+            <thead>
+            <tr>
+                <th width="15">
+                    <label>
+                        <input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x">
+                    </label>
+                </th>
+                <th>ID</th>
+                <th>表单提示文字</th>
+                <th>数据字段名</th>
+                <th>数据类型</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <foreach name="va" item="vo">
+                <td>
+                    <input type="checkbox" class="js-check" data-yid="js-check-y" data-xid="js-check-x" name="ids[]"
+                           value="{$vo.Id}" title="ID:{$vo.Id}">
+                </td>
+                <notempty name="category">
+                    <td>
+                        <input name="" class="input-order" type="text"
+                               value="">
+                    </td>
+                </notempty>
+                <td><b>{$vo.Id}</b></td>
+                <td>{$vo.formtips}</td>
+                <td>{$vo.ziduan}</td>
+                <td>{$vo.formtype}</td>
+                <td>
+                    <a class="btn btn-xs btn-primary" href="{:url('Modular/filedlist',array('id'=>$vo['Id']))}">编辑</a>
+                    <a class="btn btn-xs btn-danger js-ajax-delete" href="{:url('Modular/del',array('id'=>$vo['Id']))}">{:lang('DELETE')}</a>
+                </td>
+                </tr>
+            </foreach>
+
+        </table>
+        <div class="table-actions">
+            <notempty name="category">
+                <button class="btn btn-primary btn-sm js-ajax-submit" type="submit"
+                        data-action="{:url('AdminArticle/listOrder')}">{:lang('SORT')}
+                </button>
+            </notempty>
+
+        </div>
+        <ul class="pagination">{$page|default=''}</ul>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script></script>
+<script>
+    $('.dc').click(function(){
+        var checkID = [];
+
+        $("input[name='ids[]']:checked").each(function(i){
+            checkID[i] =$(this).val();
+        });
+        if(checkID.length > 0){
+            window.location.href = "/Inquiry/Inquiry_list/batchextel?ids="+checkID;
+            return;
+        }else{
+            $('.tips_error').html('请至少选择一项');
+        }
+    });
+</script>
+</body>
+</html>

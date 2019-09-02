@@ -1,0 +1,103 @@
+<include file="public@header"/>
+<style type="text/css">
+    .pic-list li {
+        margin-bottom: 5px;
+    }
+</style>
+
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <!--<ul class="nav nav-tabs">-->
+        <!--<li><a href="{:url('AdminArticle/index')}">文章管理</a></li>-->
+        <!--<li class="active"><a href="{:url('AdminArticle/add')}">添加文章</a></li>-->
+        <!--<li><a href="{:url('AdminArticle/columnadd')}">添加筛选栏目内容</a></li>-->
+    <!--</ul>-->
+    <form action="{:url('Modular/edittemplate')}" method="post" class="form-horizontal js-ajax-form margin-top-20">
+        <div class="row">
+            <div class="col-md-9">
+                <table class="table table-bordered table_Insert">
+                    <input class="form-control" type="text" name="post[id]"value="{$res.Id}" style="display: none"/>
+                    <input class="form-control" type="text" name="post[surface]"value="{$res.surface}" style="display: none"/>
+                    <input class="form-control" type="text" name="post[category_id]"value="{$res.category_id}" style="display: none"/>
+                    <tr>
+                        <th>表单提示文字<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="text" name="post[biaodan]"
+                                   id="sortid" required value="{$res.formtips}" placeholder="请输入表单提示文字"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>字段名称<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="text" name="post[ziduan]"
+                                    required value="{$res.ziduan}" placeholder="请输入字段名称"  readonly="readonly"/>
+                        </td>
+                    </tr>
+                    <input type="text" style="display: none" id="ziduan" value="{$res.formtype}">
+                    <tr>
+                        <td bgcolor="#FFFFFF"><strong>数据类型：</strong></td>
+                        <td bgcolor="#FFFFFF">
+                            <select name="dtype" id="type" style="width:200px">
+                                <option value="text">单行文本(varchar)</option>
+                                <option value="textchar">单行文本(char)</option>
+                                <option value="multitext">多行文本</option>
+                                <option value="htmltext">HTML文本</option>
+                                <option value="textdata">文本保存HTML数据</option>
+                                <option value="int">整数类型</option>
+                                <option value="float">小数类型</option>
+                                <option value="datetime">时间类型</option>
+                                <option value="img">图片</option>
+                                <option value="select">使用option下拉框</option>
+                                <option value="radio">使用radio选项卡</option>
+                                <option value="checkbox">Checkbox多选框</option>
+                            </select>        </td>
+                    </tr>
+                    <script>
+                        var ziduan = $('#ziduan').attr('value');
+                        $('#type>option').map((value)=>{
+                            if($($('#type>option')[value]).attr('value')===ziduan){
+                                $($('#type>option')[value]).attr('selected','true');
+                            }
+                        })
+                    </script>
+                    <tr>
+                        <th>默认值：<span class="form-required">*</span></th>
+                        <td>
+                            <textarea name="post[vdefault]" type="text" id="vdefault" style="width:70%;height:60px">{$res.vdefault}</textarea>
+                            <p class="help-block">如果定义数据类型为select、radio、checkbox时，此处填写被选择的项目(用“,”分开，如“男,女,人妖”)。</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>最大长度：</th>
+                        <td>
+                            <input class="form-control" type="text" name="post[length]" id="keywords" value="{$res.changeform}"
+                                   placeholder="请输入关键字">
+                            <p class="help-block">文本数据必须填写，大于255为text类型</p>
+                        </td>
+                    </tr>
+                </table>
+                <hook name="portal_admin_article_edit_view_main"/>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('ADD')}</button>
+                        <a class="btn btn-default" href="{:url('Modular/index')}">{:lang('BACK')}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <hook name="portal_admin_article_edit_view_right_sidebar"/>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript">
+    //编辑器路径定义
+    var editorURL = GV.WEB_ROOT;
+</script>
+<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.all.min.js"></script>
+
+</body>
+</html>

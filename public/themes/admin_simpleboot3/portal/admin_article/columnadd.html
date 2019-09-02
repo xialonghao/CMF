@@ -1,0 +1,158 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('AdminArticle/index')}">文章管理</a></li>
+        <li><a href="{:url('AdminArticle/add')}">添加文章</a></li>
+        <li><a href="{:url('AdminArticle/columnadd')}">添加筛选栏目内容</a></li>
+    </ul>
+    <!--<form class="well form-inline margin-top-20" method="get" action="{:url('InquiryList/lists')}">-->
+        <!--手机号:-->
+        <!--<input type="text" class="form-control" name="mobile" style="width: 120px;" value="{:input('request.mobile/s','')}" placeholder="请输入手机号">-->
+        <!--邮箱:-->
+        <!--<input type="text" class="form-control" name="email" style="width: 120px;" value="{:input('request.email/s','')}" placeholder="请输入{:lang('EMAIL')}">-->
+        <!--<input type="submit" class="btn btn-primary" value="搜索" />-->
+        <!--<a class="btn btn-danger" href="{:url('User/index')}">清空</a>-->
+
+    <!--</form>-->
+    <form  style="width: 50%;" class="js-ajax-form" action="" method="post">
+
+        <table class="table table-hover table-bordered table-list">
+            <thead>
+            <tr>
+                <th>栏目名称</th>
+                <th>字段</th>
+                <th>表单名称</th>
+                <th>一级栏目</th>
+                <th>二级栏目</th>
+                <th>三级栏目</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <foreach name='res' item='val'>
+                <th>{$val.name}</th>
+                <th>{$val.ziduan}</th>
+                <th>{$val.columnname}</th>
+                <th>{$val.yiji}</th>
+                <th>{$val.erji}</th>
+                <th>{$val.sanji}</th>
+                <th>
+                    <a class="btn btn-xs btn-primary" href="{:url('AdminArticle/zdbsedit',array('id'=>$val['id']))}">编辑</a>
+                    <a class="btn btn-xs btn-danger js-ajax-delete" href="{:url('AdminArticle/zdbsdels',array('id'=>$val['id']))}">删除</a>
+                </th>
+                </foreach>
+            </tr>
+            </tbody>
+
+        </table>
+        <div class="table-actions">
+            <notempty name="category">
+                <button class="btn btn-primary btn-sm js-ajax-submit" type="submit"
+                        data-action="{:url('AdminArticle/listOrder')}">{:lang('SORT')}
+                </button>
+            </notempty>
+
+        </div>
+        <ul class="pagination">{$page|default=''}</ul>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script></script>
+<!--<script>-->
+    <!--md="";-->
+    <!--$.ajax({-->
+        <!--url:'{:url("DataBackup/myshow")}',-->
+        <!--type:'POST',-->
+        <!--data:{},-->
+        <!--success:function(res){-->
+            <!--var files = res.data;-->
+            <!--$.each(files,function(key,val){  //遍历二维数组-->
+                <!--md +="<tr>";-->
+                <!--md += "<td>"+val.filename+"</td>";-->
+                <!--md += "<td>"+val.creationtime+"</td>";-->
+                <!--md += "<td><a id='lj' class='btn btn-xs btn-primary huanyuan' href='javascript:;' filename="+val.filename+">还原</a><a class='btn btn-xs btn-danger js-ajax-delete' id='del' href='javascript:;' deles="+val.filename+">删除</a> </td>";-->
+                <!--md +="</tr>";-->
+                <!--$('.table tbody').html(md);-->
+            <!--});-->
+            <!--var estimar = true;-->
+            <!--$('.huanyuan').click(function(){-->
+                <!--if(estimar){-->
+                    <!--estimar = false;-->
+                    <!--var fil = $(this).attr('filename');-->
+                    <!--$('.huanyuan').css({width:'36px'});-->
+                    <!--var i;-->
+                    <!--var setIn = setInterval(()=>{-->
+                        <!--i+='.';-->
+                        <!--if(i.length>6){-->
+                            <!--i = '.';-->
+                            <!--$('.huanyuan').text(i);-->
+                        <!--}else{-->
+                            <!--$('.huanyuan').text(i);-->
+                        <!--}-->
+                    <!--},500);-->
+                    <!--$.ajax({-->
+                        <!--url:'{:url("DataBackup/inputDatabase")}',-->
+                        <!--type:'get',-->
+                        <!--data:{ids:fil},-->
+                        <!--success:function(res){-->
+                            <!--alert(res);-->
+                            <!--estimar= true;-->
+                            <!--clearInterval(setIn);-->
+                            <!--$('.huanyuan').text('还原')-->
+                        <!--}-->
+                    <!--})-->
+                <!--}-->
+            <!--})-->
+            <!--$('#del').click(function(){-->
+                <!--var delet = $(this).attr('deles');-->
+
+                <!--$.ajax({-->
+                    <!--url:'{:url("DataBackup/shanchu")}',-->
+                    <!--type:'POST',-->
+                    <!--data:{ids:delet},-->
+                    <!--success:function(res){-->
+                        <!--if(res.code=='200'){-->
+                            <!--alert(res.msg);-->
+                        <!--}else if(res.code=='500'){-->
+                            <!--alert(res.msg);-->
+                        <!--}-->
+                    <!--}-->
+                <!--})-->
+            <!--})-->
+        <!--}-->
+    <!--})-->
+    <!--$('#copia').click(function(){-->
+        <!--$.ajax({-->
+            <!--url:'{:url("DataBackup/exportDatabase")}',-->
+            <!--type:'POST',-->
+            <!--data:{},-->
+            <!--success:function(res){-->
+                <!--if(res.code=='200'){-->
+                    <!--alert(res.msg);-->
+                <!--}else if(res.code=='500'){-->
+                    <!--alert(res.msg);-->
+                <!--}-->
+            <!--}-->
+        <!--})-->
+    <!--});-->
+    <!--// $('#lj').click(function(){-->
+    <!--//     $.ajax({-->
+    <!--//         url:'{:url("DataBackup/inputdatabase")}',-->
+    <!--//         type:'POST',-->
+    <!--//         data:{},-->
+    <!--//         success:function(res){-->
+    <!--//             if(res.code=='200'){-->
+    <!--//                 alert(res.msg);-->
+    <!--//             }else if(res.code=='500'){-->
+    <!--//                 alert(res.msg);-->
+    <!--//             }-->
+    <!--//         }-->
+    <!--//     })-->
+    <!--// });-->
+
+<!--</script>-->
+</body>
+</html>

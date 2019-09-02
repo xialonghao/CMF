@@ -1,0 +1,520 @@
+ public function addtemplate(){
+        $data = $this->request->param();
+        $tab ="alter table `".$data['post']['surface']."` add ".$data['post']['ziduan']." varchar(".$data['post']['length'].")";
+
+        $addfiled = Db::query($tab);
+
+        if(empty($addfiled)){
+
+        //img图片
+        if($data['dtype']=='img'){
+            $image_info = Db::table('cmf_createrecords')->where('id="'.$data['post']['id'].'"')->find();
+            $content_one = ''.$image_info['addtemplates'].'
+                    <tr>
+                    <th>'.$data['post']['biaodan'].'</th>
+                    <td>
+                    <input type="hidden" name="post[more]['.$data['post']['ziduan'].']" id="bannes" value="">
+                    <a href="javascript:uploadOneImage("图片上传","#'.$data['post']['ziduan'].'");">
+                    <img src="__TMPL__/public/assets/images/default-thumbnail.png" id="bannes-preview" width="135" style="cursor: pointer"/>
+                    </a>
+                    </td>
+                    </tr>,';
+            $content_two =''.$image_info['edittemplates'].'
+                            <tr>
+                            <th>'.$data['post']['biaodan'].'</th>
+                            </tr>
+                            <tr>
+                            <td>
+                            <div style="text-align: center;">
+                            <input type="hidden" name="post[more]['.$data['post']['ziduan'].']" id="thumbnail"
+                            value="{$post.more.'.$data['post']['ziduan'].'|default=""}">
+                            <a href="javascript:uploadOneImage("图片上传","#'.$data['post']['ziduan'].'");">
+                            <if condition="empty($post.more.thumbnail)">
+                            <img src="__TMPL__/public/assets/images/default-thumbnail.png"
+                            id="thumbnail-preview"
+                            width="135" style="cursor: pointer"/>
+                            <else/>
+                            <img src="{:cmf_get_image_preview_url($post.more.'.$data['post']['ziduan'].')}"
+                            id="thumbnail-preview"
+                            width="135" style="cursor: pointer"/>
+                            </if>
+                            </a>
+                            <input type="button" class="btn btn-sm btn-cancel-thumbnail" value="取消图片">
+                            </div>
+                            </td>
+                            </tr>,';
+            $image_add  = Db::table('cmf_createrecords')
+                ->insertGetId(['addtemplates'=>$content_one,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+            if($image_add){
+                $image_addtwo = Db::table('cmf_createrecords')
+                    ->where('id="'.$image_add.'"')
+                    ->update(['edittemplates'=>$content_two,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+                if($image_addtwo){
+                    return $this->success('添加成功');
+                }
+                return $this->success('添加成功');
+            }else{
+                return $this->error('添加失败');
+            }
+
+
+        }
+        //text单文本
+        if($data['dtype']=='text'){
+            $image_info = Db::table('cmf_createrecords')->where('id="'.$data['post']['id'].'"')->find();
+
+            $content_one = ' '.$image_info['addtemplates'].'
+                   <tr>
+                        <th>'.$data['post']['biaodan'].'<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="text" name="post['.$data['post']['ziduan'].']"
+                                   id="title" required value="" placeholder="请输入标题"/>
+                        </td>
+                    </tr>,';
+            $content_two =''.$image_info['edittemplates'].'
+                           ';
+            $image_add  = Db::table('cmf_createrecords')
+                ->insertGetId(['addtemplates'=>$content_one,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+            if($image_add){
+                $image_addtwo = Db::table('cmf_createrecords')
+                    ->where('id="'.$image_add.'"')
+                    ->update(['edittemplates'=>$content_two,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+                if($image_addtwo){
+                    return $this->success('添加成功');
+                }
+                return $this->success('添加成功');
+            }else{
+                return $this->error('添加失败');
+            }
+        }
+        //textchar char单文本
+        if($data['dtype']=='imag'){
+            $image_info = Db::table('cmf_createrecords')->where('id="'.$data['post']['id'].'"')->find();
+            $content_one = ' '.$image_info['addtemplates'].'
+                   <tr>
+                        <th>'.$data['post']['biaodan'].'<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="text" name="post['.$data['post']['ziduan'].']"
+                                   id="title" required value="" placeholder="请输入标题"/>
+                        </td>
+                    </tr>,';
+            $content_two =''.$image_info['edittemplates'].'
+                         <tr>
+                        <th>'.$data['post']['biaodan'].'<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="text" name="post['.$data['post']['ziduan'].']"
+                                   id="title" required value="'.$data['post']['ziduan'].'" placeholder="请输入标题"/>
+                        </td>
+                        </tr>,';
+            $image_add  = Db::table('cmf_createrecords')
+                ->insertGetId(['addtemplates'=>$content_one,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+            if($image_add){
+                $image_addtwo = Db::table('cmf_createrecords')
+                    ->where('id="'.$image_add.'"')
+                    ->update(['edittemplates'=>$content_two,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+                if($image_addtwo){
+                    return $this->success('添加成功');
+                }
+                return $this->success('添加成功');
+            }else{
+                return $this->error('添加失败');
+            }
+        }
+        //multitext textarea文本
+        if($data['dtype']=='multitext'){
+            $image_info = Db::table('cmf_createrecords')->where('id="'.$data['post']['id'].'"')->find();
+            $content_one = ' '.$image_info['addtemplates'].'
+                   <tr>
+                        <th>'.$data['post']['biaodan'].'<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="text" name="post['.$data['post']['ziduan'].']"
+                                   id="title" required value="" placeholder="请输入标题"/>
+                        </td>
+                    </tr>,';
+            $content_two =''.$image_info['edittemplates'].'
+                           ';
+            $image_add  = Db::table('cmf_createrecords')
+                ->insertGetId(['addtemplates'=>$content_one,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+            if($image_add){
+                $image_addtwo = Db::table('cmf_createrecords')
+                    ->where('id="'.$image_add.'"')
+                    ->update(['edittemplates'=>$content_two,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+                if($image_addtwo){
+                    return $this->success('添加成功');
+                }
+                return $this->success('添加成功');
+            }else{
+                return $this->error('添加失败');
+            }
+        }
+        //htmltext也就是单文本
+        if($data['dtype']=='imag'){
+            $image_info = Db::table('cmf_createrecords')->where('id="'.$data['post']['id'].'"')->find();
+            $content_one = ' '.$image_info['addtemplates'].'
+                   <tr>
+                        <th>'.$data['post']['biaodan'].'<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="text" name="post['.$data['post']['ziduan'].']"
+                                   id="title" required value="" placeholder="请输入标题"/>
+                        </td>
+                    </tr>,';
+            $content_two =''.$image_info['edittemplates'].'
+                        <tr>
+                            <th>'.$data['post']['biaodan'].'</th>
+                            <td>
+                                <textarea class="form-control" name="post['.$data["post"]["ziduan"].']" style="height: 50px;"
+                                          placeholder="请填写摘要">'.$data["post"]["ziduan"].'</textarea>
+                            </td>
+                        </tr>,';
+            $image_add  = Db::table('cmf_createrecords')
+                ->insertGetId(['addtemplates'=>$content_one,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+            if($image_add){
+                $image_addtwo = Db::table('cmf_createrecords')
+                    ->where('id="'.$image_add.'"')
+                    ->update(['edittemplates'=>$content_two,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+                if($image_addtwo){
+                    return $this->success('添加成功');
+                }
+                return $this->success('添加成功');
+            }else{
+                return $this->error('添加失败');
+            }
+        }
+        //textdata文本编辑器
+        if($data['dtype']=='imag'){
+            $image_info = Db::table('cmf_createrecords')->where('id="'.$data['post']['id'].'"')->find();
+            $content_one = ''.$image_info['addtemplates'].'
+                    <tr>
+                        <th>'.$data['post']['biaodan'].'</th>
+                        <td>
+                            <script type="text/plain" id="content" name="post['.$data['post']['ziduan'].']"></script>
+                        </td>
+                    </tr>,';
+            $content_two =''.$image_info['edittemplates'].'
+                    <tr>
+                        <th>内容</th>
+                        <td>
+                            <script type="text/plain" id="content" name="post[post_content]">{$post.post_content}</script>
+                        </td>
+                    </tr>,';
+            $image_add  = Db::table('cmf_createrecords')
+                ->insertGetId(['addtemplates'=>$content_one,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+            if($image_add){
+                $image_addtwo = Db::table('cmf_createrecords')
+                    ->where('id="'.$image_add.'"')
+                    ->update(['edittemplates'=>$content_two,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+                if($image_addtwo){
+                    return $this->success('添加成功');
+                }
+                return $this->success('添加成功');
+            }else{
+                return $this->error('添加失败');
+            }
+        }
+        //int整形单文本
+        if($data['dtype']=='imag'){
+            $image_info = Db::table('cmf_createrecords')->where('id="'.$data['post']['id'].'"')->find();
+            $content_one = ' '.$image_info['addtemplates'].'
+                   <tr>
+                        <th>'.$data['post']['biaodan'].'<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="text" name="post['.$data['post']['ziduan'].']"
+                                   id="title" required value="" placeholder="请输入标题"/>
+                        </td>
+                    </tr>,';
+            $content_two =''.$image_info['edittemplates'].'
+                    <tr>
+                        <th>'.$data['post']['biaodan'].'<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="text" name="post['.$data['post']['ziduan'].']"
+                                   id="title" required value="'.$data['post']['ziduan'].'" placeholder="请输入标题"/>
+                        </td>
+                    </tr>,';
+            $image_add  = Db::table('cmf_createrecords')
+                ->insertGetId(['addtemplates'=>$content_one,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+            if($image_add){
+                $image_addtwo = Db::table('cmf_createrecords')
+                    ->where('id="'.$image_add.'"')
+                    ->update(['edittemplates'=>$content_two,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+                if($image_addtwo){
+                    return $this->success('添加成功');
+                }
+                return $this->success('添加成功');
+            }else{
+                return $this->error('添加失败');
+            }
+        }
+        //float单文本
+        if($data['dtype']=='imag'){
+            $image_info = Db::table('cmf_createrecords')->where('id="'.$data['post']['id'].'"')->find();
+            $content_one = ' '.$image_info['addtemplates'].'
+                   <tr>
+                        <th>'.$data['post']['biaodan'].'<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="text" name="post['.$data['post']['ziduan'].']"
+                                   id="title" required value="" placeholder="请输入标题"/>
+                        </td>
+                    </tr>,';
+            $content_two =''.$image_info['edittemplates'].'
+                            <tr>
+                            <th>'.$data['post']['biaodan'].'</th>
+                            </tr>
+                            <tr>
+                            <td>
+                            <input class="form-control js-bootstrap-datetime" type="text" name="post['.$data['post']['ziduan'].']"
+                            value="'.$data['post']['ziduan'].'">
+                            </td>
+                            </tr> ';
+            $image_add  = Db::table('cmf_createrecords')
+                ->insertGetId(['addtemplates'=>$content_one,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+            if($image_add){
+                $image_addtwo = Db::table('cmf_createrecords')
+                    ->where('id="'.$image_add.'"')
+                    ->update(['edittemplates'=>$content_two,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+                if($image_addtwo){
+                    return $this->success('添加成功');
+                }
+                return $this->success('添加成功');
+            }else{
+                return $this->error('添加失败');
+            }
+        }
+        //datetime时间文本框
+        if($data['dtype']=='imag'){
+            $image_info = Db::table('cmf_createrecords')->where('id="'.$data['post']['id'].'"')->find();
+            $content_one = ' '.$image_info['addtemplates'].'
+                    <tr>
+                        <th><b>'.$data['post']['biaodan'].'</b></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input class="form-control js-bootstrap-datetime" type="text" name="post['.$data['post']['ziduan'].']" value="">
+                        </td>
+                    </tr>,';
+            $content_two =''.$image_info['edittemplates'].'
+                            <tr>
+                            <th><b>'.$data['post']['biaodan'].'</b></th>
+                            </tr>
+                            <tr>
+                            <td>
+                            <input class="form-control js-bootstrap-datetime" type="text" name="post['.$data['post']['ziduan'].']"
+                            value="'.$data['post']['ziduan'].'">
+                            </td>
+                            </tr>,';
+            $image_add  = Db::table('cmf_createrecords')
+                ->insertGetId(['addtemplates'=>$content_one,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+            if($image_add){
+                $image_addtwo = Db::table('cmf_createrecords')
+                    ->where('id="'.$image_add.'"')
+                    ->update(['edittemplates'=>$content_two,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+                if($image_addtwo){
+                    return $this->success('添加成功');
+                }
+                return $this->success('添加成功');
+            }else{
+                return $this->error('添加失败');
+            }
+        }
+        //select下拉文本框
+        if($data['dtype']=='select'){
+            $fenge = $data['post']['vdefault'];
+            $fenge_one = explode(',',$fenge);
+            $str='';
+            $str_edit = '';
+            foreach($fenge_one as $key=>$val){
+                $str .='<option>'.$val.'</option>';
+                $str_edit .='<option value="'.$data['post']['ziduan'].'">'.$val.'</option>';
+            }
+
+            $image_info = Db::table('cmf_createrecords')->where('id="'.$data['post']['id'].'"')->find();
+            $content_one = ' '.$image_info['addtemplates'].'
+                            <th>
+                            <b>'.$data['post']['biaodan'].'</b>
+                            </th>
+                            <td>
+                            <select class="add_select" style="min-width: 300px;height:30px;border-radius: 5px;padding-left: 10px">
+                            '.$str.' 
+                            </select>
+                            </td>
+                            </tr>,';
+            $content_two =''.$image_info['edittemplates'].'
+                            <th>
+                            <b>'.$data['post']['biaodan'].'</b>
+                            </th>
+                            <td>
+                            <select class="add_select" style="min-width: 300px;height:30px;border-radius: 5px;padding-left: 10px">              
+                            '.$str_edit.'           
+                            </select>
+                            </td>
+                            </tr>,';
+            $image_add  = Db::table('cmf_createrecords')
+                ->insertGetId(['addtemplates'=>$content_one,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+            if($image_add){
+                $image_addtwo = Db::table('cmf_createrecords')
+                    ->where('id="'.$image_add.'"')
+                    ->update(['edittemplates'=>$content_two,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+                if($image_addtwo){
+                    return $this->success('添加成功');
+                }
+                return $this->success('添加成功');
+            }else{
+                return $this->error('添加失败');
+            }
+        }
+        //radio
+        if($data['dtype']=='radio'){
+            $fenge = $data['post']['vdefault'];
+            $fenge_one = explode(',',$fenge);
+            $str='';
+            $str_edit = '';
+            $str='';
+            $str_edit = '';
+            foreach($fenge_one as $key=>$val){
+                $str .='<td class="bline"><input type="radio" name="'.$data['post']['ziduan'].'" value="'.$val.'" checked>'.$val.'';
+                $str_edit .='<td class="bline"><input type="radio" name="'.$data['post']['ziduan'].'" value="'.$data['post']['ziduan'].'" checked>'.$val.'';
+            }
+            $image_info = Db::table('cmf_createrecords')->where('id="'.$data['post']['id'].'"')->find();
+            $content_one = ' '.$image_info['addtemplates'].'
+                                <tr> 
+                                <td width="90" class="bline" height=\'24\'>&nbsp;dan：</td>
+                                <td class="bline"><input type="radio" name="dan" value="奈奈" checked>奈奈
+                                </td>
+                                </tr>,';
+            $content_two =''.$image_info['edittemplates'].'
+                            <tr>
+                            <tr> 
+                            <td width="90" class="bline" height=\'24\'>&nbsp;dan：</td>
+                            <td class="bline"><input type="radio" name="dan" value="奈奈" checked>奈奈
+                            </td>
+                            </tr>,';
+            $image_add  = Db::table('cmf_createrecords')
+                ->insertGetId(['addtemplates'=>$content_one,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+            if($image_add){
+                $image_addtwo = Db::table('cmf_createrecords')
+                    ->where('id="'.$image_add.'"')
+                    ->update(['edittemplates'=>$content_two,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+                if($image_addtwo){
+                    return $this->success('添加成功');
+                }
+                return $this->success('添加成功');
+            }else{
+                return $this->error('添加失败');
+            }
+
+        }
+        //多选框
+        if($data['dtype']=='Checkbox'){
+            $fenge = $data['post']['vdefault'];
+            $fenge_one = explode(',',$fenge);
+            $str='';
+            $str_edit = '';
+            foreach($fenge_one as $key=>$val){
+                $str .=' <input type="checkbox" name="'.$data['post']['ziduan'].'"  value="'.$val.'">'.$val.'';
+                $str_edit .=' <input type="checkbox" name="'.$data['post']['ziduan'].'"  value="'.$data['post']['ziduan'].'">'.$val.'';
+            }
+            $image_info = Db::table('cmf_createrecords')->where('id="'.$data['post']['id'].'"')->find();
+            $content_one = ' '.$image_info['addtemplates'].'
+                                </tr>
+                                </table><table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:3px;">
+                                <tr> 
+                                <td width="90" class="bline" height=\'24\'>&nbsp;asd：</td>
+                                <td class="bline">
+                                '.$str.'
+                                </td>
+                                </tr>,';
+            $content_two =''.$image_info['edittemplates'].'
+                                   </tr>
+                            </table><table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:3px;">
+                            <tr> 
+                            <td width="90" class="bline" height=\'24\'>&nbsp;asd：</td>
+                            <td class="bline">
+                            '.$str_edit.'
+                            </td>
+                            </tr>,';
+            $image_add  = Db::table('cmf_createrecords')
+                ->insertGetId(['addtemplates'=>$content_one,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+            if($image_add){
+                $image_addtwo = Db::table('cmf_createrecords')
+                    ->where('id="'.$image_add.'"')
+                    ->update(['edittemplates'=>$content_two,'category_id'=>$data['post']['category_id'],'surface'=>$data['post']['surface'],'vdefault'=>$data['post']['vdefault'],'formtips'=>$data['post']['biaodan'],'changeform'=>$data['post']['length'],'formtype'=>$data['dtype'],'ziduan'=>$data['post']['ziduan']]);
+                if($image_addtwo){
+                    return $this->success('添加成功');
+                }
+                return $this->success('添加成功');
+            }else{
+                return $this->error('添加失败');
+            }
+        }
+            return $this->success('添加成功');
+        }else{
+            return $this->error('添加失败');
+        }
+    }
+
+上面是添加
+下面是编辑
+<script>
+    var portal_id = $('#js-categories-id-input').val();
+    $.ajax({
+        url: "{:url('AdminArticle/addshow')}",
+        type: "post",
+        data: {portal_id: portal_id},
+        success: function (res) {
+            
+            Insertarr = $("tr[name^='Insert']").length;
+            for(var i=0;i<Insertarr;i++){
+                $($("tr[name^='Insert']")[0]).remove()
+            }
+            if(res){
+                var campos = res.data.ziduan;
+                var campos_one = campos.split(',');
+                var columnname = res.data.columnname;
+                var columnname_arr = columnname.split(',');
+                campos_one.map((value,index) => {
+                    if(columnname_arr[index].indexOf('下')>0){
+                        var tr = '<tr name="Insert">\n' +
+                            '<th><b>' + columnname_arr[index] + '</b></th>\n' +
+                            '<td>\n' +
+                            '<select class="add_select'+index+'" style="min-width: 300px;height:30px;border-radius: 5px;padding-left: 10px"></select>'+
+                            '</td>\n' +
+                            '</tr>';
+                        $('.Insert_fields').after(tr);
+                        if(res.res[index]){
+                            res.res[index].split(",").map((oplist)=>{
+                                var op = '<option value="'+oplist+'">'+oplist+'</option>';
+                                $('.add_select'+index).append(op);
+                            });
+                        };
+                    } else if(columnname_arr[index].indexOf('图')>0){
+                        var tr = '<tr name="Insert">\n' +
+                                '<th>' + columnname_arr[index] + '</th>\n'+
+                                '<td>\n' +
+                                '<div>\n' +
+                                '<input type="hidden" name="post[more]['+value+']" id="'+ value +'"  value="{$post.more.homethumb|default=""}">\n' +
+                                '<a href="javascript:uploadOneImage(\'图片上传\',\'#'+ value +'\');">\n' +
+                                '<if condition="empty($post.more.homethumb)">\n' +
+                                ' <img src="__TMPL__/public/assets/images/default-thumbnail.png" id="homethumb-preview"width="135" style="cursor: pointer"/>\n' +
+                                '<else/>\n' +
+                                '<img src="{:cmf_get_image_preview_url($post.more.homethumb)}" id="homethumb-preview" width="135" style="cursor: pointer"/>\n' +
+                                '</if>\n' +
+                                '</a>\n' +
+                                '</div>\n' +
+                                ' </td>\n' +
+
+                        $('.Insert_fields').after(tr);
+                    }else{
+                        var tr = '<tr name="Insert">\n' +
+                            '    <th>' + columnname_arr[index] + '</th>\n' +
+                            '    <td>\n' +
+                            '        <input class="form-control ipt_text" type="text" name="post[' + value + ']" id="ceshi" value="" placeholder="请输入不作为关键字">\n'  +
+                            '        <p class="help-block">多关键词之间用英文逗号隔开</p>\n' +
+                            '    </td>\n' +
+                            '</tr>';
+                        $('.Insert_fields').after(tr);
+
+                        // $('.ipt_text').attr('value','{$post.'+value+'}')
+                    }
+                })
+            }
+        }
+    })

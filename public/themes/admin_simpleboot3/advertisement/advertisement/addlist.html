@@ -1,0 +1,249 @@
+<include file="public@header"/>
+<style type="text/css">
+    .pic-list li {
+        margin-bottom: 5px;
+    }
+</style>
+
+</head>
+<body>
+<div class="wrap js-check-wrap">
+
+    <form action="{:url('Advertisement/addPost')}" method="post" class="form-horizontal js-ajax-form margin-top-20">
+        <div class="row">
+            <div class="col-md-9">
+                <table class="table table-bordered table_Insert">
+                    <tr>
+                        <th width="110">广告投放范围<span class="form-required">*</span></th>
+                        <td>
+                            <input class="form-control" type="text" style="width:400px;display: inline-block" required value=""
+                                   placeholder="请选择分类" onclick="doSelectCategory();" id="js-categories-name-input"
+                                   readonly/>
+                            <input class="form-control" type="hidden" value="" name="post[category_id]"
+                                   id="js-categories-id-input"/>
+                            <input id="qiehuan" value="切换栏目表单" type="button" style="background: #006fc4;color: #fff;border: none;padding: 4px 10px;outline: none;">
+                        </td>
+                    </tr>
+                    <!--<tr>-->
+                        <!--<th>附加表<span class="form-required">*</span></th>-->
+                        <!--<td>-->
+                            <!--<input class="form-control" type="text" name="post[surface]"-->
+                                   <!--id="sortid" required value="" placeholder="请输入排序"/>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <tr>
+                        <th>广告昵称</th>
+                        <td>
+                            <input class="form-control" type="text" name="post[username]"
+                                   id="sortid" required value="" placeholder="广告昵称"/>
+                        </td>
+                    </tr>
+                    <tr>
+                    <tr>
+                        <th>文字内容</th>
+                        <td><input class="form-control" type="text" name="post[character]" id="source" value=""
+                                   placeholder="请输入文章来源"></td>
+                    </tr>
+
+                    <tr>
+                        <th>文字链接</th>
+                        <td><input class="form-control" type="text" name="post[url_character]" id="url_character" value=""
+                                   placeholder="请输入文章来源"></td>
+                    </tr>
+                    <tr>
+                        <th>上传图片</th>
+                        <td>
+                            <input type="hidden" name="post[more][image]" id="image" value="">
+                            <a href="javascript:uploadOneImage('图片上传','#image');">
+                                <img src="__TMPL__/public/assets/images/default-thumbnail.png"
+                                     id="image-preview"
+                                     width="135" style="cursor: pointer"/>
+                            </a>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <th>图片链接</th>
+                        <td>
+                            <textarea class="form-control" name="post[url_image]" style=""
+                                      placeholder="请输入不作为摘要"></textarea>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th><b>发布时间</b></th>
+                        <td>
+                            <input class="form-control js-bootstrap-datetime" type="text" name="post[starttime]"
+                                   value="{:date('Y-m-d H:i:s',time())}">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th><b>到期时间</b></th>
+                        <td>
+                            <input class="form-control js-bootstrap-datetime" type="text" name="post[endtime]"
+                                   value="{:date('Y-m-d H:i:s',time())}">
+                        </td>
+                    </tr>
+                </table>
+                <hook name="portal_admin_article_edit_view_main"/>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('ADD')}</button>
+                        <a class="btn btn-default" href="{:url('Advertisement/index')}">{:lang('BACK')}</a>
+                    </div>
+                </div>
+            </div>
+
+                </table>
+
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript">
+    //编辑器路径定义
+    var editorURL = GV.WEB_ROOT;
+</script>
+<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.all.min.js"></script>
+<script>
+    $('#definicion').click(function () {
+        var portal_id = $('#js-categories-id-input').val();
+
+        var campos = $('#campos').val();
+        var generc = $('#generc').val();
+        var columnname = $('#columnname').val();
+        $.ajax({
+            url: '{:url("AdminArticle/alteradd")}',
+            type: "post",
+            data: {campos: campos, generc: generc, portal_id: portal_id,columnname:columnname},
+            success: function (res) {
+                if (res.code == '200') {
+                    alert(res.msg);
+                } else if (res.code == '500') {
+                    alert(res.msg);
+                }
+            }
+        })
+    })
+</script>
+
+<script type="text/javascript">
+    var portal_id = $('#js-categories-id-input').val();
+    $(function () {
+
+        editorcontent = new baidu.editor.ui.Editor();
+        editorcontent.render('content');
+        try {
+            editorcontent.sync();
+        } catch (err) {
+        }
+        $('.btn-cancel-thumbnail').click(function () {
+            $('#thumbnail-preview').attr('src', '__TMPL__/public/assets/images/default-thumbnail.png');
+            $('#thumbnail').val('');
+        });
+
+    });
+
+    function doSelectCategory() {
+        var selectedCategoriesId = $('#js-categories-id-input').val();
+        console.log(selectedCategoriesId);
+        openIframeLayer("{:url('AdminCategory/select')}?ids=" + selectedCategoriesId, '请选择分类', {
+            area: ['700px', '400px'],
+            btn: ['确定', '取消'],
+            yes: function (index, layero) {
+                console.log(portal_id);
+                //do something
+
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                var selectedCategories = iframeWin.confirm();
+                if (selectedCategories.selectedCategoriesId.length == 0) {
+                    layer.msg('请选择分类');
+                    return;
+                }
+                $('#js-categories-id-input').val(selectedCategories.selectedCategoriesId.join(','));
+                $('#js-categories-name-input').val(selectedCategories.selectedCategoriesName.join(' '));
+                //console.log(layer.getFrameIndex(index));
+                +
+
+                    layer.close(index); //如果设定了yes回调，需进行手工关闭
+
+            }
+        });
+    }
+</script>
+<script>
+    var Insertarr=0;
+    $('#qiehuan').click(function () {
+        var portal_id = $('#js-categories-id-input').val();
+        if (portal_id == '') {
+            alert('请选择分类栏目');
+        }
+        $.ajax({
+            url: "{:url('AdminArticle/addshow')}",
+            type: "post",
+            data: {portal_id: portal_id},
+            success: function (res) {
+                console.log(res);
+                Insertarr = $("tr[name^='Insert']").length;
+                for(var i=0;i<Insertarr;i++){
+                    $($("tr[name^='Insert']")[0]).remove()
+                }
+                if(res){
+                    var campos = res.data.ziduan;
+                    var campos_one = campos.split(',');
+                    var columnname = res.data.columnname;
+                    var columnname_arr = columnname.split(',');
+                    campos_one.map((value,index) => {
+                        if(columnname_arr[index].indexOf('下')>0){
+                            var tr = '<tr name="Insert">\n' +
+                                '<th><b>' + columnname_arr[index] + '</b></th>\n' +
+                                '<td>\n' +
+                                '<select class="add_select'+index+'" style="min-width: 300px;height:30px;border-radius: 5px;padding-left: 10px"></select>'+
+                                '</td>\n' +
+                                '</tr>';
+                            $('.Insert_fields').after(tr);
+                            if(res.res[index]){
+                                res.res[index].split(",").map((oplist)=>{
+                                    var op = '<option value="'+oplist+'">'+oplist+'</option>';
+                                    $('.add_select'+index).append(op);
+                                });
+                            };
+                        } else if(columnname_arr[index].indexOf('图')>0){
+                            var tr = '<tr name="Insert">\n' +
+                                '<th><b>' + columnname_arr[index] + '</b></th>\n' +
+                                '<td>\n' +
+                                '<div>\n' +
+                                '<input type="hidden" name="post[more]['+ value +']" id="'+ value +'" value="">\n' +
+                                '   <a href="javascript:uploadOneImage(\'图片上传\',\'#'+ value +'\');"> \n' +
+                                '<img src="__TMPL__/public/assets/images/default-thumbnail.png"\n' +
+                                'id="thumbnail-preview"\n' +
+                                'width="135" style="cursor: pointer"/>\n' +
+                                '</a>\n' +
+                                '<input type="button" class="btn btn-sm btn-cancel-thumbnail" value="取消图片">\n' +
+                                '</div>\n' +
+                                '</td>\n' +
+                                '</tr>';
+                            $('.Insert_fields').after(tr);
+                        }else{
+                            var tr = '<tr name="Insert">\n' +
+                                '    <th>' + columnname_arr[index] + '</th>\n' +
+                                '    <td>\n' +
+                                '        <input class="form-control" type="text" name="post[' + value + ']" id="ceshi" value=""\n' +
+                                '                                   placeholder="请输入不作为关键字">\n' +
+
+                                '    </td>\n' +
+                                '</tr>';
+                            $('.Insert_fields').after(tr);
+                        }
+
+
+                    })
+                }
+
+            }
+        })
+    })
+</script>
+</body>

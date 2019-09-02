@@ -1,0 +1,110 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="javascript:;">模型列表</a></li>
+    </ul>
+    <form class="well form-inline margin-top-20" method="get" action="{:url('Modular/index')}">
+        数据表:
+        <input type="text" class="form-control" name="surface" style="width: 120px;" value="{:input('request.surface/s','')}" placeholder="请输入广告昵称">
+        <!--邮箱:-->
+        <!--<input type="text" class="form-control" name="email" style="width: 120px;" value="{:input('request.email/s','')}" placeholder="请输入{:lang('EMAIL')}">-->
+        <input type="submit" class="btn btn-primary" value="搜索" />
+        <!--<a class="btn btn-danger" href="{:url('User/index')}">清空</a>-->
+    </form>
+
+    <form class="js-ajax-form" action="" method="post">
+        <div class="table-actions">
+            <notempty name="category">
+                <button class="btn btn-primary btn-sm js-ajax-submit" type="submit"
+                        data-action="{:url('AdminArticle/listOrder')}">{:lang('SORT')}
+                </button>
+            </notempty>
+            <!--<button class="btn btn-danger btn-sm js-ajax-submit" type="submit"-->
+                    <!--data-action="{:url('advertisement/del')}" data-subcheck="true" data-msg="您确定删除吗？">-->
+                <!--批量删除-->
+            <!--</button>-->
+            <!--<button class="btn btn-danger btn-sm js-ajax-submit"  data-action="{:url('KeyWorder/add')}" style='background-color: #0d6aad;border: none' type="submit">-->
+                <!--添加-->
+            <!--</button>-->
+            <a href="{:url('Modular/addlist')}" style='background-color: #0d6aad;border: none; color:#fff; width:80px; height:25px;padding:3.5px 10px;border-radius: 3px;vertical-align: middle;font-size: 12px'>添加表和栏目</a>
+            <span class="tips_error"></span>
+<!--             <button class="btn btn-danger btn-sm dc" type="submit"
+                    data-action="{:url('InquiryList/batchextel')}"  data-msg="您确定批量导出吗？">
+                批量导出
+            </button> -->
+        </div>
+        <table class="table table-hover table-bordered table-list">
+            <thead>
+            <tr>
+                <th width="15">
+                    <label>
+                        <input type="checkbox" class="js-check-all" data-direction="x" data-checklist="js-check-x">
+                    </label>
+                </th>
+                <th>ID</th>
+                <th>栏目</th>
+                <th>表</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <foreach name="list" item="vo">
+
+                    <td>
+                        <input type="checkbox" class="js-check" data-yid="js-check-y" data-xid="js-check-x" name="ids[]"
+                               value="{$vo.Id}" title="ID:{$vo.Id}">
+                    </td>
+                    <notempty name="category">
+                        <td>
+                            <input name="" class="input-order" type="text"
+                                   value="">
+                        </td>
+                    </notempty>
+                    <td><b>{$vo.Id}</b></td>
+                <foreach item="val" name="posts">
+
+                        <if condition="($vo['category_id'] == $val['id'])">
+                            <td>{$vo.category_id}</td>
+                        </if>
+                </foreach>
+                    <td>{$vo.surface}</td>
+                    <td>
+                        <a class="btn btn-xs btn-primary" href="{:url('Modular/editlist',array('id'=>$vo['Id']))}">查看</a>
+                        <a class="btn btn-xs btn-danger js-ajax-delete" href="{:url('Modular/dletes',array('surface'=>$vo['surface']))}">{:lang('DELETE')}</a>
+                    </td>
+                </tr>
+
+            </foreach>
+
+        </table>
+        <div class="table-actions">
+            <notempty name="category">
+                <button class="btn btn-primary btn-sm js-ajax-submit" type="submit"
+                        data-action="{:url('AdminArticle/listOrder')}">{:lang('SORT')}
+                </button>
+            </notempty>
+
+        </div>
+        <ul class="pagination">{$page|default=''}</ul>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script></script>
+<script>
+    $('.dc').click(function(){
+        var checkID = [];
+
+        $("input[name='ids[]']:checked").each(function(i){
+            checkID[i] =$(this).val();
+        });
+        if(checkID.length > 0){
+            window.location.href = "/Inquiry/Inquiry_list/batchextel?ids="+checkID;
+            return;
+        }else{
+            $('.tips_error').html('请至少选择一项');
+        }
+    });
+</script>
+</body>
+</html>
